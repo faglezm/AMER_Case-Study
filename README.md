@@ -193,14 +193,14 @@ This data extract should be sorted in descending order for Summed_Energy_Lost, a
 
 SELECT
   Participant_Code,
+  Facility_Code,
   Status,
   Year(Start_Time) AS Year,
   ROUND(AVG(Outage_MW),2) AS Avg_Outage_MW_Loss,
-  ROUND(AVG(TIMESTAMPDIFF(MINUTE, Start_Time, End_Time)/60/24), 2) AS Average_Outage_Duration_Time_Days
+  ROUND(SUM(Outage_MW),2) AS Summed_Energy_Lost
 FROM AEMR
 WHERE Status = "Approved" AND Reason = "Forced"
-GROUP BY Participant_Code, Status, Year
-ORDER BY Avg_Outage_MW_Loss, Year DESC;
+GROUP BY Participant_Code, Facility_Code, Status, Year
+ORDER BY Year(Start_Time), Summed_Energy_Lost DESC;
 
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
