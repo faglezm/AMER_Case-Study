@@ -204,30 +204,4 @@ GROUP BY Participant_Code, Facility_Code, Status, Year
 ORDER BY Year(Start_Time), Summed_Energy_Lost DESC;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-(SELECT 
- CAST(CONCAT('{"columns": [',IFNULL(@cols,''),'], "indexes": [',IFNULL(@indexes,''),'], "tables":[',IFNULL(@tbls,''),'], "views":[',IFNULL(@views,''),'], "server_name": "', @@hostname, '", "version": "', VERSION(), '"}') AS CHAR) as metadata_json
-FROM
- (SELECT (@cols:=NULL),
- (SELECT (0) FROM information_schema.columns cols
- WHERE table_schema LIKE IFNULL(database(), '%')
- AND (0x00) IN (@cols:=CONCAT_WS(',', @cols, CONCAT('{"schema":"',cols.table_schema,'","table":"',cols.table_name,'","name":"', cols.column_name, '","type":"', cols.column_type, '","nullable":', IF(cols.IS_NULLABLE = 'YES', 'true', 'false'), ',"collation":"', IFNULL(cols.COLLATION_NAME, ''), '"}'))))
- ) cols,
- (SELECT (@indexes:=NULL),
- (SELECT (0) FROM information_schema.statistics indexes
- WHERE table_schema LIKE IFNULL(database(), '%')
- AND (0x00) IN (@indexes:=CONCAT_WS(',', @indexes, CONCAT('{"schema":"',indexes.table_schema,'","table":"',indexes.table_name,'","name":"', indexes.index_name, '","column":"', indexes.column_name, '","index_type":"', LOWER(indexes.index_type), '","cardinality":', indexes.cardinality, ',"unique":', IF(indexes.non_unique = 1, 'false', 'true'), '}'))))
- ) indexes,
- (SELECT (@tbls:=NULL),
- (SELECT (0) FROM information_schema.tables tbls
- WHERE table_schema LIKE IFNULL(database(), '%')
- AND (0x00) IN (@tbls:=CONCAT_WS(',', @tbls, CONCAT('{', '"schema":"', `TABLE_SCHEMA`, '",', '"table":"', `TABLE_NAME`, '",', '"rows":', IFNULL(`TABLE_ROWS`, 0), ', "type":"', IFNULL(`TABLE_TYPE`, ''), '",', '"engine":"', IFNULL(`ENGINE`, ''), '",', '"collation":"', IFNULL(`TABLE_COLLATION`, ''), '"}'))))
- ) tbls,
- (SELECT (@views:=NULL),
- (SELECT (0) FROM information_schema.views views
- WHERE table_schema LIKE IFNULL(database(), '%')
- AND (0x00) IN (@views:=CONCAT_WS(',', @views, CONCAT('{', '"schema":"', `TABLE_SCHEMA`, '",', '"view_name":"', `TABLE_NAME`, '",', '"definition":"', REPLACE(TO_BASE64(VIEW_DEFINITION), '
-', ''), '"}')))
- ) views) x);
- 
  
