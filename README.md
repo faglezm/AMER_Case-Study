@@ -25,12 +25,11 @@ GROUP BY Reason ORDER BY Total_Number_Outage_Events DESC;
 /* Question 1.3: Write a SQL statement to COUNT the number of valid (i.e. Status = Approved) outage events sorted by their reason (i.e. Forced, Consequential, Scheduled, Opportunistic)* for 2017. */ 
   
 SELECT
-	 Count(*) as Total_Number_Outage_Events,
+   Count(*) as Total_Number_Outage_Events,
    Status, 
    Reason
 FROM AEMR
-WHERE
-	Status='Approved' AND YEAR(Start_Time)=2017
+WHERE Status='Approved' AND YEAR(Start_Time)=2017
 GROUP BY Status, Reason ORDER BY Reason;
 
 /* Question 1.4: Which outage type occurred the least in 2017?
@@ -46,50 +45,47 @@ SELECT
   Reason,
   COUNT(*) AS Total_Number_Outage_Events, 
   ROUND(AVG(TIMESTAMPDIFF(MINUTE, Start_Time, End_Time)/1440), 2) AS Average_Outage_Duration_Time_Days, 
-  Year
+  Year(Start_Time) AS Year
 FROM AEMR 
-WHERE Status = "Approved" AND Year(Start_Time) = "2016" OR Year(Start_Time) = "2017"
-GROUP BY Reason, Year ORDER BY Reason, Year;
+WHERE Status = "Approved"
+GROUP BY Status, Reason, Year ORDER BY Year, Reason;
 
 2) How frequently do outages occur?
 
 /* Question 2.1: Write a SQL statement showing the monthly COUNT of all approved outage types (Forced, Consequential, Scheduled, Opportunistic) that occurred for 2016. Order by Reason and Month. */
 
 SELECT
-	Status
-	,Reason
-	,Count(*) as Total_Number_Outage_Events
-	,Month(Start_Time) as Month
+  Status,
+  Reason,
+  Count(*) as Total_Number_Outage_Events,
+  Month(Start_Time) as Month
 FROM AEMR
 WHERE Status='Approved' AND YEAR(Start_Time) = 2016
-GROUP BYStatus, Reason, Month(Start_Time)
+GROUP BY Status, Reason, Month(Start_Time)
 ORDER BY Reason, Month;
 
 /* Question 2.2: Write a SQL Statement showing the monthly COUNT of all approved outage types (Forced, Consequential, Scheduled, Opportunistic) that occurred during 2017. Order by Reason and Month. */
 
 SELECT
-	Status,
-	Reason,
-	Count(*) as Total_Number_Outage_Events,
-	Month(Start_Time) as Month
+  Status,
+  Reason,
+  Count(*) as Total_Number_Outage_Events,
+  Month(Start_Time) as Month
 FROM AEMR
 WHERE Status='Approved' AND YEAR(Start_Time) = 2017
-GROUP BYStatus, Reason, Month(Start_Time)
+GROUP BY Status, Reason, Month(Start_Time)
 ORDER BY Reason, Month;
 
 Question 2.3: Write a SQL statement showing the total number of all approved outage types (Forced, Consequential, Scheduled, Opportunistic) that occurred for both 2016 and 2017 per month (i.e. 1 – 12). Don't forget to Order this by by Month and Year.
 
 SELECT
-	Status,
-	Count(*) as Total_Number_Outage_Events,
-	Month(Start_Time) as Month,
-	Year(Start_Time) as Year
+  Status,
+  Count(*) as Total_Number_Outage_Events,
+  Month(Start_Time) as Month,
+  Year(Start_Time) as Year
 FROM AEMR
 WHERE Status='Approved'
-GROUP BY
-	Status,
-	Month(Start_Time),
-	Year(Start_Time)
+GROUP BYStatus, Month(Start_Time),Year(Start_Time)
 ORDER BY Year(Start_Time), Month(Start_Time);
 
 3) Are there any energy providers that have more outages than their peers that may be indicative of being unreliable?
@@ -97,10 +93,10 @@ ORDER BY Year(Start_Time), Month(Start_Time);
 /* Question 3.1: Write a SQL statement showing the count of all approved outage types (Forced, Consequential, Scheduled, Opportunistic) for all participant codes for 2016 and 2017. Order by Year and Participant_Code. */
 
 SELECT
-	Count(*) as Total_Number_Outage_Events,
-	Participant_Code,
-	Status,
-	Year(Start_Time) as Year
+  Count(*) as Total_Number_Outage_Events,
+  Participant_Code,
+  Status,
+  Year(Start_Time) as Year
 FROM AEMR WHERE Status='Approved'
 GROUP BY Participant_Code, Status, Year(Start_Time)
 ORDER BY Year(Start_Time), Participant_Code;
@@ -108,10 +104,10 @@ ORDER BY Year(Start_Time), Participant_Code;
 /* Question 3.2: Write a SQL statement showing the average duration of all approved outage types (Forced, Consequential, Scheduled, Opportunistic) for all participant codes from 2016 to 2017. Don't forget to order the average duration in descending order with the DESC keyword. */
 
 SELECT
-	Participant_Code
-	,Status
-	,Year(Start_Time) as Year
-	,ROUND(AVG((TIMESTAMPDIFF(MINUTE, Start_Time, End_Time)/60)/24),2) AS Average_Outage_Duration_Time_Days
+  Participant_Code,
+  Status,
+  Year(Start_Time) as Year,
+  ROUND(AVG((TIMESTAMPDIFF(MINUTE, Start_Time, End_Time)/60)/24),2) AS Average_Outage_Duration_Time_Days
 FROM AEMR
 WHERE Status='Approved'
 GROUP BY Participant_Code, Status, Year(Start_Time)
@@ -125,9 +121,9 @@ When an energy provider provides energy to the market, they are making a commitm
 /* Question 1.1: Write a SQL Statement to COUNT the total number of approved forced outage events for 2016 and 2017. Order by Reason and Year. */
 
 SELECT
-	COUNT(*) AS Total_Number_Outage_Events,
-	Reason,
-	Year(Start_Time) AS Year
+  COUNT(*) AS Total_Number_Outage_Events,
+  Reason,
+  Year(Start_Time) AS Year
 FROM AEMR
 WHERE Status='Approved' AND Reason = 'Forced'
 GROUP BY Reason, Year(Start_Time)
@@ -137,9 +133,9 @@ ORDER BY Reason, Year(Start_Time);
 
 SELECT
   SUM(CASE WHEN Reason = "Forced" THEN 1 ELSE 0 END) AS Total_Number_Forced_Outage_Events,
-	COUNT(*) AS Total_Number_Outage_Events,
-	ROUND(((SUM(CASE WHEN Reason = "Forced" THEN 1 ELSE 0 END)/COUNT(*))*100),2) AS Forced_Outage_Percentage,
-	Year(Start_Time) AS Year
+  COUNT(*) AS Total_Number_Outage_Events,
+  ROUND(((SUM(CASE WHEN Reason = "Forced" THEN 1 ELSE 0 END)/COUNT(*))*100),2) AS Forced_Outage_Percentage,
+  Year(Start_Time) AS Year
 FROM AEMR
 WHERE Status='Approved'
 GROUP BY Year(Start_Time)
