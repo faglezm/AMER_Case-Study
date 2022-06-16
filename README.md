@@ -1,13 +1,13 @@
 # AEMR_Case-Study
 SQL Query that analyze the American Energy Market Regulator and identify the providers, outages, emergency status, their reasons and fixing times. 
 
-PART I
-Energy Stability and Market Outages
+## PART I
+#### Energy Stability and Market Outages
 
-1) What are the most common outage types?
+### 1) What are the most common outage types?
 
 /* Question 1.1: In the AEMR dataset, write a SQL statement that COUNTS the number of valid (i.e. Status = Approved) outage events for 2016. This should be grouped by and ordered by the outage reason.*/
-
+```markdown
 SELECT 
   COUNT(*) AS Total_Number_Outage_Events, 
   Status, 
@@ -15,7 +15,7 @@ SELECT
 FROM AEMR 
 WHERE Status = "Approved" AND YEAR(Start_Time) = "2016"
 GROUP BY Reason ORDER BY Total_Number_Outage_Events DESC;
-
+```
 /* Question 1.2: Which outage type occurred most frequently in 2016? */ 
   *** a) Forced ****
   b) Consequential
@@ -23,7 +23,7 @@ GROUP BY Reason ORDER BY Total_Number_Outage_Events DESC;
   d) Opportunistic Maintenance (Planned)
   
 /* Question 1.3: Write a SQL statement to COUNT the number of valid (i.e. Status = Approved) outage events sorted by their reason (i.e. Forced, Consequential, Scheduled, Opportunistic)* for 2017. */ 
-  
+ ```markdown 
 SELECT
    Count(*) as Total_Number_Outage_Events,
    Status, 
@@ -31,7 +31,7 @@ SELECT
 FROM AEMR
 WHERE Status='Approved' AND YEAR(Start_Time)=2017
 GROUP BY Status, Reason ORDER BY Reason;
-
+```
 /* Question 1.4: Which outage type occurred the least in 2017?
   a) Forced
   b) Consequential
@@ -39,7 +39,7 @@ GROUP BY Status, Reason ORDER BY Reason;
   *** d) Opportunistic Maintenance (Planned) ***
   
 /* Question 1.5: Write a SQL statement that calculates the average duration in days rounded to 2 decimal places for each approved outage type across both 2016 and 2017. Don't forget to Order this by Reason and Year. */
-
+```markdown
 SELECT
   Status,
   Reason,
@@ -49,11 +49,11 @@ SELECT
 FROM AEMR 
 WHERE Status = "Approved"
 GROUP BY Status, Reason, Year ORDER BY Year, Reason;
-
-2) How frequently do outages occur?
+```
+### 2) How frequently do outages occur?
 
 /* Question 2.1: Write a SQL statement showing the monthly COUNT of all approved outage types (Forced, Consequential, Scheduled, Opportunistic) that occurred for 2016. Order by Reason and Month. */
-
+```markdown
 SELECT
   Status,
   Reason,
@@ -63,9 +63,9 @@ FROM AEMR
 WHERE Status='Approved' AND YEAR(Start_Time) = 2016
 GROUP BY Status, Reason, Month(Start_Time)
 ORDER BY Reason, Month;
-
+```
 /* Question 2.2: Write a SQL Statement showing the monthly COUNT of all approved outage types (Forced, Consequential, Scheduled, Opportunistic) that occurred during 2017. Order by Reason and Month. */
-
+```markdown
 SELECT
   Status,
   Reason,
@@ -75,9 +75,9 @@ FROM AEMR
 WHERE Status='Approved' AND YEAR(Start_Time) = 2017
 GROUP BY Status, Reason, Month(Start_Time)
 ORDER BY Reason, Month;
-
+```
 Question 2.3: Write a SQL statement showing the total number of all approved outage types (Forced, Consequential, Scheduled, Opportunistic) that occurred for both 2016 and 2017 per month (i.e. 1 – 12). Don't forget to Order this by by Month and Year.
-
+```markdown
 SELECT
   Status,
   Count(*) as Total_Number_Outage_Events,
@@ -87,11 +87,11 @@ FROM AEMR
 WHERE Status='Approved'
 GROUP BYStatus, Month(Start_Time),Year(Start_Time)
 ORDER BY Year(Start_Time), Month(Start_Time);
-
-3) Are there any energy providers that have more outages than their peers that may be indicative of being unreliable?
+```
+### 3) Are there any energy providers that have more outages than their peers that may be indicative of being unreliable?
 
 /* Question 3.1: Write a SQL statement showing the count of all approved outage types (Forced, Consequential, Scheduled, Opportunistic) for all participant codes for 2016 and 2017. Order by Year and Participant_Code. */
-
+```markdown
 SELECT
   Count(*) as Total_Number_Outage_Events,
   Participant_Code,
@@ -100,9 +100,9 @@ SELECT
 FROM AEMR WHERE Status='Approved'
 GROUP BY Participant_Code, Status, Year(Start_Time)
 ORDER BY Year(Start_Time), Participant_Code;
-
+```
 /* Question 3.2: Write a SQL statement showing the average duration of all approved outage types (Forced, Consequential, Scheduled, Opportunistic) for all participant codes from 2016 to 2017. Don't forget to order the average duration in descending order with the DESC keyword. */
-
+```markdown
 SELECT
   Participant_Code,
   Status,
@@ -112,14 +112,14 @@ FROM AEMR
 WHERE Status='Approved'
 GROUP BY Participant_Code, Status, Year(Start_Time)
 ORDER BY Year(Start_Time), Average_Outage_Duration_Time_Days DESC;
-
-Part II
+```
+## Part II
 When an energy provider provides energy to the market, they are making a commitment to the market and saying; “We will supply X amount of energy to the market under a contractual obligation.” However, in a situation where the outages are forced, the energy provider intended to provide energy but is unable to provide energy and is forced offline. If many energy providers are forced offline at the same time, it could cause an energy security risk that AEMR needs to mitigate.
 
-1) Of the outage types in 2016 and 2017, what are the respective percentages composed of Forced Outage(s)?
+### 1) Of the outage types in 2016 and 2017, what are the respective percentages composed of Forced Outage(s)?
 
 /* Question 1.1: Write a SQL Statement to COUNT the total number of approved forced outage events for 2016 and 2017. Order by Reason and Year. */
-
+```markdown
 SELECT
   COUNT(*) AS Total_Number_Outage_Events,
   Reason,
@@ -128,9 +128,9 @@ FROM AEMR
 WHERE Status='Approved' AND Reason = 'Forced'
 GROUP BY Reason, Year(Start_Time)
 ORDER BY Reason, Year(Start_Time);
-
+```
 /* Question 1.2: Building upon the query you completed in the previous question, calculate the proportion of outages that were forced for both 2016 and 2017. Order from 2016 to 2017. */
-
+```markdown
 SELECT
   SUM(CASE WHEN Reason = "Forced" THEN 1 ELSE 0 END) AS Total_Number_Forced_Outage_Events,
   COUNT(*) AS Total_Number_Outage_Events,
@@ -140,11 +140,11 @@ FROM AEMR
 WHERE Status='Approved'
 GROUP BY Year(Start_Time)
 ORDER BY Year(Start_Time);
-
-2) What was the average duration for a forced outage during both 2016 and 2017? Have we seen an increase in the average duration of forced outages?
+```
+### 2) What was the average duration for a forced outage during both 2016 and 2017? Have we seen an increase in the average duration of forced outages?
 
 /* Question 2.1: Write a SQL statement to calculate the AVERAGE duration of forced outage events rounded to 2 decimal places, as well as the AVERAGE amount of energy lost (MW) (also rounded to 2 decimal places) for both 2016 and 2017 due to forced outages. Don't forget to order this by YEAR. */
-
+```markdown
 SELECT
   Status,
   Year(Start_Time) AS Year,
@@ -154,9 +154,9 @@ FROM AEMR
 WHERE Status ='Approved' AND Reason = 'Forced'
 GROUP BY Status, Year(Start_Time)
 ORDER BY Status, Year(Start_Time);
-
+```
 /* Question 2.2 Write a SQL statement to compare the AVERAGE duration of each individual outage event (Forced, Consequential, Planned and Opportunistic) for both 2016 and 2017. Order from 2016 to 2017. */
-
+```markdown
 SELECT
   Status,
   Reason,
@@ -167,11 +167,11 @@ FROM AEMR
 WHERE Status ='Approved'
 GROUP BY Status,Reason, Year(Start_Time)
 ORDER BY Status,Reason, Year(Start_Time);
-
+```
 3) Which energy providers tend to be the most unreliable?
 
 /* Question 3.1: Write a SQL Statement to calculate the AVERAGE duration and AVERAGE energy lost (MW) for all approved outages where the reason is equal to Forced for each participant code, Ordered By AVERAGE energy loss (Avg_Outage_MW_Loss) and Year in descending order.*/
-
+```markdown
 SELECT
   Participant_Code,
   Status,
@@ -182,11 +182,11 @@ FROM AEMR
 WHERE Status = "Approved" AND Reason = "Forced"
 GROUP BY Participant_Code, Status, Year
 ORDER BY Avg_Outage_MW_Loss, Year DESC;
-
+```
 /* Question 3.2: Write a SQL statement to calculate the Average Outage (MW) Loss and Overall Summed Outage (MW) loss for each participant code where the Status is Approved and the Outage Reason is Forced across both 2016 and 2017.
 
 This data extract should be sorted in descending order for Summed_Energy_Lost, and ordered from 2016 to 2017. */
-
+```markdown
 SELECT
   Participant_Code,
   Facility_Code,
@@ -198,6 +198,6 @@ FROM AEMR
 WHERE Status = "Approved" AND Reason = "Forced"
 GROUP BY Participant_Code, Facility_Code, Status, Year
 ORDER BY Year(Start_Time), Summed_Energy_Lost DESC;
-
+```
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  
