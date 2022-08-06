@@ -1,5 +1,5 @@
 # AMER_Case-Study
-SQL Query that analyze the American Energy Market Regulator and identify the providers, outages, emergency status, their reasons and fixing times. 
+This is the SQL Query that analyze the American Energy Market Regulator and identify the providers, outages, emergency status, their reasons and fixing times. The organization of this information let us see key insights that later in the tableau presentation helped to provide more accuarete details about the American Market Energy Regulator (AMER). 
 
 PART I
 Energy Stability and Market Outages
